@@ -153,8 +153,23 @@ Token Lexer::lexIdentifierOrKeyword()
 Token Lexer::lexNumber()
 {
     std::string num;
-    while (isxdigit(peek()))
+    if (peek() == '0' && (peek(1) == 'x' || peek(1) == 'X'))
+    {
         num += advance();
+        num += advance(); // consume 0x
+        while (isxdigit(peek()))
+            num += advance();
+    }
+    else
+    {
+        while (isdigit(peek()))
+            num += advance();
+    }
+    if (peek() == 'h' || peek() == 'H')
+    {
+        num = "0x" + num;
+        advance(); // consume h or H
+    }
     return {TokenType::NUMBER, num, line};
 }
 
@@ -173,6 +188,11 @@ Token Lexer::lexImmediate()
     {
         while (isdigit(peek()))
             imm += advance();
+    }
+    if (peek() == 'h' || peek() == 'H')
+    {
+        imm = "0x" + imm.substr(1, imm.size() - 1);
+        advance(); // consume h or H
     }
     return {TokenType::IMMEDIATE, imm, line};
 }
