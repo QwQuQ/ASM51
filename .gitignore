@@ -1,5 +1,5 @@
-/build
-/CMakeFiles
+build/
+CMakeFiles/
 .DStore
 
 CMakeCache.txt
