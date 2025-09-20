@@ -1,0 +1,3 @@
+/Users/hatsune/asm51/CMakeFiles/asm51.dir
+/Users/hatsune/asm51/CMakeFiles/edit_cache.dir
+/Users/hatsune/asm51/CMakeFiles/rebuild_cache.dir
