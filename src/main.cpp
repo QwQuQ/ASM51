@@ -9,7 +9,7 @@
 
 int main(int argc, char *argv[])
 {
-    std::string code = readAsmFile("test.asm");
+    std::string code = readAsmFile("../test.asm");
     Lexer lexer(code);
     std::vector<Token> tokens = lexer.tokenize();
 
