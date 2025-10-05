@@ -13,10 +13,11 @@ int main(int argc, char *argv[])
     Lexer lexer(code);
     std::vector<Token> tokens = lexer.tokenize();
 
-    // for (const auto &i : tokens)
-    // {
-    //     std::cout << "[" << i.type << "," << "\"" << i.value << "\"" << ",line:" << i.line << "]" << std::endl;
-    // }
+    for (const auto &i : tokens)
+    {
+        std::cout << "[" << i.type << "," << "\"" << i.value << "\"" << ",line:" << i.line << "]" << std::endl;
+    }
+    std::cout << std::endl;
 
     Parser parser(tokens);
     ParseResult parse_results = parser.parse();

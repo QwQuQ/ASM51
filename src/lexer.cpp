@@ -6,7 +6,6 @@
 
 #include "lexer.hpp"
 
-
 std::ostream &operator<<(std::ostream &os, TokenType token)
 {
     switch (token)
@@ -62,17 +61,17 @@ Lexer::Lexer(const std::string &src) : source(src) {}
 
 char Lexer::peek(size_t offset) const
 {
-    return (pos + offset < source.size()) ? source[pos + offset] : '\0';
+    return (pos + offset < source.size()) ? source[pos + offset] : EOF;
 }
 
 char Lexer::advance()
 {
-    return (pos < source.size()) ? source[pos++] : '\0';
+    return (pos < source.size()) ? source[pos++] : EOF;
 }
 
 void Lexer::skipWhitespace()
 {
-    while (isspace(peek()))
+    while ((isspace(peek()) || peek() == '\0') && peek() != EOF)
     {
         if (peek() == '\n')
             line++;
@@ -90,13 +89,22 @@ std::vector<Token> Lexer::tokenize()
         {
             tokens.push_back(lexComment());
         }
-        else if (isalpha(peek()) || peek() == '_')
+        else if (peek() == EOF)
         {
-            tokens.push_back(lexIdentifierOrKeyword());
+            tokens.push_back(Token{TokenType::END_OF_FILE, "", -1});
+        }
+        else if (peek() == '$')
+        {
+            tokens.push_back(Token{TokenType::IDENTIFIER, "$", line});
+            advance();
         }
         else if (peek() == '#')
         {
             tokens.push_back(lexImmediate());
+        }
+        else if (isalpha(peek()) || peek() == '_')
+        {
+            tokens.push_back(lexIdentifierOrKeyword());
         }
         else if (isdigit(peek()))
         {
@@ -117,7 +125,6 @@ std::vector<Token> Lexer::tokenize()
             tokens.push_back({TokenType::UNKNOWN, std::string(1, advance()), line});
         }
     }
-    tokens.push_back({TokenType::END_OF_FILE, "", -1});
     return tokens;
 }
 
@@ -185,22 +192,42 @@ Token Lexer::lexNumber()
 Token Lexer::lexImmediate()
 {
     std::string imm;
-    imm += advance(); // consume '#'
+    if (peek() == '#')
+        advance(); // consume #
     if (peek() == '0' && (peek(1) == 'x' || peek(1) == 'X'))
     {
         imm += advance();
         imm += advance(); // consume 0x
+
+        while (peek() == '0' && isxdigit(peek(1)))
+        {
+            advance();
+        }
+
         while (isxdigit(peek()))
+        {
             imm += advance();
+        }
     }
     else
     {
-        while (isdigit(peek()))
-            imm += advance();
+        std::cout << "IMM:";
+        while (peek() == '0' && isxdigit(peek(1)))
+        {
+            std::cout << peek();
+            advance();
+        }
+        std::cout << std::endl;
+
+        while (isxdigit(peek()))
+        {
+            imm += peek();
+            advance();
+        }
     }
     if (peek() == 'h' || peek() == 'H')
     {
-        imm = "0x" + imm.substr(1, imm.size() - 1);
+        imm = "0x" + imm.substr(0, imm.size());
         advance(); // consume h or H
     }
     return {TokenType::IMMEDIATE, imm, line};

@@ -31,6 +31,6 @@ private:
     Token advance();
     bool isLabel(const Token& token);
     bool isMnemonic(const Token& token);
-    void parseInstruction(ParseResult& result);
+    void parseInstruction(ParseResult &result);
     void handlePseudo(ParseResult& result);
 };
