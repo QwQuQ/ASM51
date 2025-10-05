@@ -1,6 +1,11 @@
-#include "lexer.hpp"
 #include <cctype>
 #include <unordered_set>
+#include <string>
+#include <vector>
+#include <iostream>
+
+#include "lexer.hpp"
+
 
 std::ostream &operator<<(std::ostream &os, TokenType token)
 {
@@ -41,6 +46,9 @@ std::ostream &operator<<(std::ostream &os, TokenType token)
         break;
     case TokenType::END_OF_LINE:
         os << "END_OF_LINE";
+        break;
+    case TokenType::END_OF_FILE:
+        os << "END_OF_FILE";
         break;
     case TokenType::UNKNOWN:
     default:
@@ -109,6 +117,7 @@ std::vector<Token> Lexer::tokenize()
             tokens.push_back({TokenType::UNKNOWN, std::string(1, advance()), line});
         }
     }
+    tokens.push_back({TokenType::END_OF_FILE, "", -1});
     return tokens;
 }
 

@@ -1,4 +1,6 @@
 #pragma once
+#include <cctype>
+#include <unordered_set>
 #include <string>
 #include <vector>
 #include <iostream>
@@ -16,6 +18,7 @@ enum class TokenType
     COMMENT,
     IDENTIFIER,
     NUMBER,
+    END_OF_FILE,
     END_OF_LINE,
     UNKNOWN
 };

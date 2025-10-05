@@ -1,0 +1,2 @@
+ORG 0x00
+START: MOV A, #0x00
